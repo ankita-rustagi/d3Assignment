@@ -70,7 +70,7 @@ d3.json("../JSON/assaultNew.json", function(error, data) {
       .text("Assault");
 
   var crime = g.selectAll(".crime")
-    .data(cities)
+    .data(crimes)
     .enter().append("g")
       .attr("class", "crime");
 
