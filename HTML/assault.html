@@ -35,9 +35,8 @@ var line = d3.line()
 
 d3.json("../JSON/assaultNew.json", function(error, data) {
   if (error) throw error;
-console.log(data);
  var r=Object.keys(data[0]).splice(1);
-  var cities = r.map(function(id) {
+  var crimes = r.map(function(id) {
     return {
       id: id,
       values: data.map(function(d) {
@@ -45,16 +44,15 @@ console.log(data);
       })
     };
   });
-  console.log(cities);
 
   x.domain(d3.extent(data, function(d) { return d.Year; }));
 
   y.domain([
-    d3.min(cities, function(c) { return d3.min(c.values, function(d) { return d.Assault; }); }),
-    d3.max(cities, function(c) { return d3.max(c.values, function(d) { return d.Assault; }); })
+    d3.min(crimes, function(c) { return d3.min(c.values, function(d) { return d.Assault; }); }),
+    d3.max(crimes, function(c) { return d3.max(c.values, function(d) { return d.Assault; }); })
   ]).nice();
 
-  z.domain(cities.map(function(c) { return c.id; }));
+  z.domain(crimes.map(function(c) { return c.id; }));
 
   g.append("g")
       .attr("class", "axis axis--x")
@@ -71,17 +69,17 @@ console.log(data);
       .attr("fill", "#000")
       .text("Assault");
 
-  var city = g.selectAll(".city")
+  var crime = g.selectAll(".crime")
     .data(cities)
     .enter().append("g")
-      .attr("class", "city");
+      .attr("class", "crime");
 
-  city.append("path")
+  crime.append("path")
       .attr("class", "line")
       .attr("d", function(d) { return line(d.values); })
       .style("stroke", function(d) { return z(d.id); });
 
-  city.append("text")
+  crime.append("text")
       .datum(function(d) { return {id: d.id, value: d.values[d.values.length - 1]}; })
       .attr("transform", function(d) { return "translate(" + x(d.value.Year) + "," + y(d.value.Assault) + ")"; })
       .attr("x", 3)
